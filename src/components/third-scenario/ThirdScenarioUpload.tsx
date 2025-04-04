@@ -96,7 +96,10 @@ const ThirdScenarioUpload = () => {
           tempData.push({ chain: [chain.name], data: temp });
         }
       );
-      if (modelsTarget.sequences.length === 0) {
+      if (
+        modelsTarget.sequences.length === 0 &&
+        modelsTarget.models.length != 0
+      ) {
         modelsTarget.models[0].sourceSelection.chains.map((chain) => {
           tempOptions.push(chain.name);
           tempData.push({
@@ -263,7 +266,8 @@ const ThirdScenarioUpload = () => {
               </>
             ) : null}
 
-            {modelsTarget?.sequences?.length != 0 ? (
+            {modelsTarget?.sequences?.length != 0 &&
+            modelsTarget?.models?.length != 0 ? (
               <>
                 <IntersectionOfTargetModels
                   sequence={modelsTarget.sequences[0].sequence}

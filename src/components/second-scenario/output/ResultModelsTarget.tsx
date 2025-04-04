@@ -15,6 +15,7 @@ import MCQstructure from "./MCQstructure";
 import SelectedModelsForAnalyse from "./SelectedModelsForAnalyse";
 import LCSta from "./LCSta";
 import GlobalMCQ from "./GlobalMCQ";
+import React from "react";
 
 const ResultModelsTarget = (props: {
   result: second_scenario_result;
