@@ -80,6 +80,18 @@
   }
 }
 
+@media (min-width: 1200px) {
+  .mobileOnly {
+    display: none;
+  }
+}
+
+@media (max-width: 1199px) {
+  .desktopOnly {
+    display: none;
+  }
+}
+
 .flyoutMenu {
   width: 100vw;
   height: 100vh;

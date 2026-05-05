@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Alert, Button, Divider, Row, Steps, Tooltip, message } from "antd";
-import { useMediaQuery } from "react-responsive";
 import styles from "../../components/first-scenario/first-scenario.module.css";
 import { ReloadOutlined } from "@ant-design/icons";
 
@@ -13,7 +13,14 @@ const StatusTask = (props: {
   removeDate: string;
   scenario: "Single model" | "Model(s) vs Target" | "Model vs Model";
 }) => {
-  const isDesktop = useMediaQuery({ query: "(min-width: 1200px)" });
+  const [isDesktop, setIsDesktop] = useState(true);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1200px)");
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   const steps = [
     { title: "Task uploaded" },

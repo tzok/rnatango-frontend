@@ -7,11 +7,14 @@ import Logo from "../assets/logornatango.svg";
 import { useState } from "react";
 import { Button } from "antd";
 import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
-import { useMediaQuery } from "react-responsive";
 
 const Header = () => {
-  const isDesktop = useMediaQuery({ query: "(min-width: 1200px)" });
-  return <>{isDesktop ? <DesktopHeader /> : <HeaderMobile />}</>;
+  return (
+    <>
+      <div className={styles.desktopOnly}><DesktopHeader /></div>
+      <div className={styles.mobileOnly}><HeaderMobile /></div>
+    </>
+  );
 };
 
 export default Header;

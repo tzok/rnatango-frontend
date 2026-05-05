@@ -5,7 +5,6 @@ import { ReactEChartsProps } from "../../echarts/ReactECharts";
 import styles from "../../first-scenario/first-scenario.module.css";
 import { DotChartOutlined, LineChartOutlined } from "@ant-design/icons";
 import { Divider, Row, Space, Switch, Tooltip } from "antd";
-import { useMediaQuery } from "react-responsive";
 import Download from "../../../assets/download.svg";
 
 type datasetModels = {
@@ -17,7 +16,6 @@ const HeatMap = (props: { dataset: datasetModels[]; models: string[] }) => {
   const [datasetContinous, setDatasetContinous] = useState<number[][]>([]);
   const [residue, setResidue] = useState<string[]>([]);
   const [continous, setContinous] = useState<boolean>(true);
-  const isDesktop = useMediaQuery({ query: "(min-width: 1200px)" });
   const [firstIndex, setFirstIndex] = useState<number>(0);
 
   useEffect(() => {
