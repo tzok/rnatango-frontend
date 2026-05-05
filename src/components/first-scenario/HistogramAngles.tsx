@@ -15,10 +15,6 @@ const HistogramAngles = (props: {
   const [angleResult, setAngleResult] = useState<[number, number][]>([]);
 
   useEffect(() => {
-    dataProcess();
-  }, [props.angle]);
-
-  const dataProcess: any = () => {
     let counts: { [key: number]: number } = {};
 
     props.angle.reduce((acc, element) => {
@@ -42,7 +38,7 @@ const HistogramAngles = (props: {
     }
 
     setAngleResult(histogramData);
-  };
+  }, [props.angle]);
 
   const option: ReactEChartsProps["option"] = {
     polar: [{}, {}, {}],

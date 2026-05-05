@@ -32,16 +32,18 @@ const ResultPage = (props: any) => {
   const [seedState, setSeedState] = useState(1);
   const [progress, setProgress] = useState(1);
 
+  const id = searchParams.get("id");
+
   useEffect(() => {
     processingResponse(
-      searchParams.get("id")!,
+      id!,
       setResultFile,
       setStatus,
       setError,
       "single",
       setProgress
     );
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (status === "WAITING") {

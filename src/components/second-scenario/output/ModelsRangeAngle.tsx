@@ -66,54 +66,53 @@ const ModelsRangeAngle = (props: {
   useEffect(() => {
     handleChange(columns_display);
 
+    const makeStatisticOfMCQvalue = (model: string, index: number) => {
+      let temp = {
+        name: model,
+        key: index,
+        "15": 0,
+        "30": 0,
+        "45": 0,
+        "60": 0,
+        "75": 0,
+        "90": 0,
+        "105": 0,
+        "120": 0,
+        "135": 0,
+        "150": 0,
+        "165": 0,
+        "180": 0,
+      };
+      for (let i = 0; i < props.dataset.length; i++) {
+        let value = props.dataset[i][model];
+        if (typeof value === "number" && value !== null) {
+          let index = Math.floor(value / 15);
+          let key_value = columns[index].key;
+          temp[key_value as rowType] = (temp[key_value as rowType] || 0) + 1;
+        }
+      }
+      let sum = 0;
+      for (let i = 0; i < 12; i++) {
+        let x = 0;
+        if (temp[columns[i].key as rowType] != undefined) {
+          x = temp[columns[i].key as rowType];
+        }
+        temp[columns[i].key as rowType] = +(
+          ((x + sum) * 100) /
+          props.dataset.length
+        ).toFixed(2);
+        sum = sum + x;
+      }
+      return temp;
+    };
+
     let x = props.models.map((model: string, index) => {
       return makeStatisticOfMCQvalue(model, index);
     });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     setDataStatistic(x);
     setCsvData(x);
-  }, [props.models]);
-
-  const makeStatisticOfMCQvalue = (model: string, index: number) => {
-    let temp = {
-      name: model,
-      key: index,
-      "15": 0,
-      "30": 0,
-      "45": 0,
-      "60": 0,
-      "75": 0,
-      "90": 0,
-      "105": 0,
-      "120": 0,
-      "135": 0,
-      "150": 0,
-      "165": 0,
-      "180": 0,
-    };
-    for (let i = 0; i < props.dataset.length; i++) {
-      let value = props.dataset[i][model];
-      if (typeof value === "number" && value !== null) {
-        let index = Math.floor(value / 15);
-        let key_value = columns[index].key;
-        temp[key_value as rowType] = (temp[key_value as rowType] || 0) + 1;
-      }
-    }
-    let sum = 0;
-    for (let i = 0; i < 12; i++) {
-      let x = 0;
-      if (temp[columns[i].key as rowType] != undefined) {
-        x = temp[columns[i].key as rowType];
-      }
-      temp[columns[i].key as rowType] = +(
-        ((x + sum) * 100) /
-        props.dataset.length
-      ).toFixed(2);
-      sum = sum + x;
-    }
-    return temp;
-  };
+  }, [props.models, props.dataset]);
 
   const handleChange = (value: { key: string; description: string }[]) => {
     let x: TableColumnsType = value.map(

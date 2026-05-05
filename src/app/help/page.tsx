@@ -1,5 +1,6 @@
 "use client";
-import { Image } from "antd";
+import NextImage from "next/image";
+import { Image as AntImage } from "antd";
 import styles from "./page.module.css";
 import help_select_scenarios from "../../assets/help/help_select_scenarios.png";
 import help_add_chains from "../../assets/help/help_add_chains.png";
@@ -58,7 +59,7 @@ const Help = () => {
         {`This scenario allows users to upload a single structure and analyse its angular parameters, computed for every residue in the structure (or in its fragment, if the user decides to limit the analysis to a selected region. Users receive visually friendly
         statistical summaries to enhance their understanding of the angular data (torsion and pseudotorsion angles).`}
       </p>
-      <Image
+      <AntImage
         alt={"help_select_scenarios"}
         style={{
           width: "100%",
@@ -78,7 +79,7 @@ const Help = () => {
         <i>Upload</i>
         {` button is enabled.`}
       </p>
-      <Image
+      <AntImage
         alt={"help_add_chains"}
         style={{
           width: "100%",
@@ -112,7 +113,7 @@ const Help = () => {
         can be done similarly to the first scenario by either uploading a file
         or providing a PDB ID.`}
       </p>
-      <Image
+      <AntImage
         alt={"help_select_target"}
         style={{
           width: "100%",
@@ -141,7 +142,7 @@ const Help = () => {
         fragment must be continuous. If the fragment is discontinuous,
         a message will be dislayed indicating this issue.`}
       </p>
-      <Image
+      <AntImage
         alt={"help_add_models"}
         style={{
           width: "100%",
@@ -204,7 +205,7 @@ const Help = () => {
         envelope or twist modes, offering a concise yet comprehensive
         description of the ribose geometry:`}
       </p>
-      <Image
+      <AntImage
         alt={"math_formula"}
         style={{
           width: "100%",
@@ -236,7 +237,7 @@ Given two structures `}
         <sub>T</sub>)
         {` in trigonometric representation, one has to deal with circular quantities with the period of 2\u03c0. This implies a necessity to define the difference, diff(t, t'), between two circular quantities, t and t ', which can be either directed or undirected. In the first case, subtraction of values is not commutative, meaning one must differentiate between a minuend and a subtrahend value. Since we cannot determine this in the case of structure comparison, the undirected difference is used:`}
       </p>
-      <Image
+      <AntImage
         alt={"math_formula_diff"}
         style={{
           width: "100%",
@@ -245,7 +246,7 @@ Given two structures `}
         src={equation_diff.src}
       />
       <p style={{ width: "100%" }}>where</p>
-      <Image
+      <AntImage
         alt={"math_formula_modulo"}
         style={{
           width: "100%",
@@ -256,7 +257,7 @@ Given two structures `}
       <p
         style={{ width: "100%" }}
       >{`Based on these formulas, we define the distance, \u0394(t,t'), between two angles, t and t':`}</p>
-      <Image
+      <AntImage
         alt={"math_formula_delta"}
         style={{
           width: "100%",
@@ -270,7 +271,7 @@ Given two structures `}
         <sub>T</sub>
         {` given in the trigonometric representation, results from applying the following formula for the mean of structural quantities:`}
       </p>
-      <Image
+      <AntImage
         alt={"math_formula_mcq"}
         style={{
           width: "100%",
@@ -345,7 +346,7 @@ Given two structures `}
         deleted, during which time users can revisit the result
         page.`}
       </p>
-      <Image
+      <AntImage
         alt={"help_steps"}
         style={{
           width: "100%",
@@ -383,7 +384,7 @@ Given two structures `}
         Secondary structures are color-coded according to MCQ values, and a 3D
         visualization is available through Mol*.`}
       </p>
-      <Image
+      <AntImage
         alt={"help_heatmap"}
         style={{
           width: "100%",
@@ -391,7 +392,7 @@ Given two structures `}
         width={800}
         src={help_heatmap.src}
       />
-      <Image
+      <AntImage
         alt={"help_heatmap_range"}
         style={{
           width: "100%",
@@ -407,7 +408,7 @@ Given two structures `}
       <p>{`Users can interact with the heatmap by clicking to switch between 
       a continuous range from 0\u00B0 to 180\u00B0 (Figure 6. top) and discrete 
       ranges of 0\u00B0-15\u00B0, 15\u00B0-30\u00B0, 30\u00B0-60\u00B0, and >60\u00B0 (Figure 6. bottom). The heatmap can be zoomed in or out using a slider or by scrolling. Additionally, users can adjust the range of displayed elements and download the heatmap as an SVG file.`}</p>
-      <Image
+      <AntImage
         alt={"help_line_plot"}
         style={{
           width: "100%",
@@ -421,7 +422,7 @@ Given two structures `}
         to the angle name. Additionally, users can zoom in on a specific
         fragment using the slider at the bottom.
       </p>
-      <Image
+      <AntImage
         alt={"help_molstar"}
         style={{
           width: "100%",
@@ -446,7 +447,7 @@ Given two structures `}
         dendrogram and a scatter plot. Users can also adjust the number of
         clusters.`}
       </p>
-      <Image
+      <AntImage
         alt={"help_scatter"}
         style={{
           width: "100%",
@@ -458,7 +459,7 @@ Given two structures `}
         Figure 9. Clusters resulting from model clustering in the Model vs Model
         scenario.
       </small>
-      <Image
+      <AntImage
         alt={"help_model_matrix"}
         style={{
           width: "100%",
@@ -487,17 +488,17 @@ Given two structures `}
           <tr>
             <td width="75px">
               <a href="https://www.google.com/intl/en_en/chrome/">
-                <img alt="chrome logo" width="55px" src={chrome.src} />
+                <NextImage alt="chrome logo" width={55} height={55} src={chrome} />
               </a>
             </td>
             <td width="75px">
               <a href="https://www.mozilla.org/en-US/firefox/new/">
-                <img alt="firefox logo" width="64px" src={firefox.src} />
+                <NextImage alt="firefox logo" width={64} height={64} src={firefox} />
               </a>
             </td>
             <td width="75px">
               <a href="https://www.apple.com/safari/">
-                <img alt="safari logo" width="64px" src={safari.src} />
+                <NextImage alt="safari logo" width={64} height={64} src={safari} />
               </a>
             </td>
           </tr>

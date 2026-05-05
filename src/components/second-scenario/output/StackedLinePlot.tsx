@@ -28,7 +28,7 @@ const StackedLinePlot = (props: {
       });
     });
     setDataset(temp);
-  }, [props.dataset]);
+  }, [props.dataset, props.requestedAngles]);
 
   const option: ReactEChartsProps["option"] = {
     tooltip: {

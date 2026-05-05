@@ -25,7 +25,7 @@ const ScatterPlotClustering = (props: {
 
   useEffect(() => {
     getClustering(props.taskId, setResult);
-  }, []);
+  }, [props.taskId]);
 
   useEffect(() => {
     if (result.length != 0) {
@@ -65,7 +65,7 @@ const ScatterPlotClustering = (props: {
       setData(tempData);
       setOptions(Object.keys(tempData));
     }
-  }, [result]);
+  }, [result, props.models]);
 
   const option: ReactEChartsProps["option"] = {
     toolbox: {

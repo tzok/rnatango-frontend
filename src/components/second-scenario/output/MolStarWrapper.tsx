@@ -11,8 +11,8 @@ import "molstar/build/viewer/molstar.css";
 import { ColorNames } from "molstar/lib/mol-util/color/names";
 
 import { MolScriptBuilder as MS } from "molstar/lib/mol-script/language/builder";
+import { StateObjectRef } from "molstar/lib/mol-state/object";
 import {
-  StateObjectRef,
   PluginStateObject as SO,
 } from "molstar/lib/mol-plugin-state/objects";
 import { throttleTime } from "rxjs/operators";
@@ -194,7 +194,6 @@ const MolStarWrapper = (props: MolStarWrapperProps) => {
       }
 
       pluginRef.current = plugin;
-      setReady(true);
 
       if (plugin.canvas3d) {
         plugin.canvas3d.camera.stateChanged
@@ -209,13 +208,7 @@ const MolStarWrapper = (props: MolStarWrapperProps) => {
           });
       }
 
-      await addStructure(
-        plugin,
-        props.target_file,
-        props.model_file,
-        props.lcs
-      );
-      plugin.behaviors.layout.leftPanelTabName.next("data");
+      setReady(true);
     };
 
     init();
@@ -230,15 +223,16 @@ const MolStarWrapper = (props: MolStarWrapperProps) => {
   }, []);
 
   useEffect(() => {
-    if (pluginRef.current) {
-      pluginRef.current.clear();
-      addStructure(
-        pluginRef.current,
-        props.target_file,
-        props.model_file,
-        props.lcs
-      );
-    }
+    if (!pluginRef.current) return;
+    pluginRef.current.clear();
+    addStructure(
+      pluginRef.current,
+      props.target_file,
+      props.model_file,
+      props.lcs
+    ).then(() => {
+      pluginRef.current?.behaviors.layout.leftPanelTabName.next("data");
+    });
   }, [props.target_file, props.model_file, props.lcs, ready]);
 
   return (

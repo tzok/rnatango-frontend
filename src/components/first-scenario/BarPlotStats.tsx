@@ -22,7 +22,7 @@ const BarPlotStats = (props: { angle: any[]; type: string }) => {
       setExo(x.length - count);
       setEndo(count);
     }
-  }, [props.angle]);
+  }, [props.angle, props.type]);
 
   const option: ReactEChartsProps["option"] = {
     legend: {

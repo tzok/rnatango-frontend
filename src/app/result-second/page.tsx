@@ -45,7 +45,7 @@ const ResultSecondScenario = () => {
       "one-many",
       setProgress
     );
-  }, []);
+  }, [taskID]);
 
   useEffect(() => {
     if (status === "WAITING") {

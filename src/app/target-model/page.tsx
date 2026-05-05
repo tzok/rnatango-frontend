@@ -127,7 +127,7 @@ const TargetModels = () => {
 
   useEffect(() => {
     UploadedTaskDetails(targetID, setModelsTarget, setError, "/one-many/form/");
-  }, []);
+  }, [targetID]);
 
   const submit = () => {
     setLoading(true);
