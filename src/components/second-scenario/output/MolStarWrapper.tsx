@@ -1,4 +1,4 @@
-import React, { Key, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DefaultPluginUISpec,
   PluginUISpec,
@@ -6,30 +6,18 @@ import {
 import { createPluginUI } from "molstar/lib/mol-plugin-ui";
 import { PluginConfig } from "molstar/lib/mol-plugin/config";
 import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
-import { PluginCommands } from "molstar/lib/mol-plugin/commands";
 
 import "molstar/build/viewer/molstar.css";
 import { ColorNames } from "molstar/lib/mol-util/color/names";
-import { ParamDefinition as PD } from "molstar/lib/mol-util/param-definition";
 
-import { Color } from "molstar/lib/mol-util/color";
 import { MolScriptBuilder as MS } from "molstar/lib/mol-script/language/builder";
 import {
-  StateObject,
   StateObjectRef,
-  StateObjectSelector,
-} from "molstar/lib/mol-state";
-import {
-  PluginStateObject,
   PluginStateObject as SO,
 } from "molstar/lib/mol-plugin-state/objects";
-import { Subscription } from "rxjs";
 import { throttleTime } from "rxjs/operators";
 import { renderReact18 } from "molstar/lib/mol-plugin-ui/react18";
-// import { inContactType } from "../../types/types";
-import { Expression } from "molstar/lib/mol-script/language/expression";
-import { Type } from "molstar/lib/mol-script/language/type";
-import { Collapse, Tooltip } from "antd";
+import { Collapse } from "antd";
 import {
   range,
   second_scenario_result_differences_lcs,
@@ -50,8 +38,8 @@ const MolStarPluginSpec: PluginUISpec = {
       showControls: false,
       controlsDisplay: "reactive",
       regionState: {
-        left: "full", // set to "hidden" to hide left panel
-        top: "full", // set to "full" to show ACGU sequence
+        left: "full",
+        top: "full",
         right: "hidden",
         bottom: "hidden",
       },
@@ -61,6 +49,16 @@ const MolStarPluginSpec: PluginUISpec = {
     remoteState: "none",
     viewport: {},
   },
+  canvas3d: {
+    renderer: {
+      backgroundColor: ColorNames.white,
+    },
+    camera: {
+      helper: {
+        axes: { name: "off", params: {} },
+      },
+    },
+  },
 };
 
 async function addComponents(
@@ -69,40 +67,36 @@ async function addComponents(
   lcs: range,
   isTarget: boolean
 ) {
-  // For each expression in nucleotides expression array, create tetrad component
-
   const commonComponent =
     await plugin.builders.structure.tryCreateComponentFromExpression(
       structure,
       MS.struct.generator.atomGroups({
         "residue-test": MS.core.logic.and([
-          // Check if chain name is corresponding
           MS.core.rel.gre([MS.ammp("auth_seq_id"), lcs.fromInclusive]),
           MS.core.rel.lte([MS.ammp("auth_seq_id"), lcs.toInclusive]),
         ]),
       }),
       isTarget ? "target-component-common" : `model-component-common`,
-      isTarget ? { label: `Target` } : { label: `Model` }
+      isTarget ? { label: "Target" } : { label: "Model" }
     );
   const otherComponent =
     await plugin.builders.structure.tryCreateComponentFromExpression(
       structure,
       MS.struct.generator.atomGroups({
         "residue-test": MS.core.logic.or([
-          // Check if chain name is corresponding
           MS.core.rel.lt([lcs.toInclusive, MS.ammp("auth_seq_id")]),
           MS.core.rel.gr([lcs.fromInclusive, MS.ammp("auth_seq_id")]),
         ]),
       }),
       isTarget ? "target-component-other" : `model-component-other`,
-      isTarget ? { label: `Target other` } : { label: `Model other` }
+      isTarget ? { label: "Target other" } : { label: "Model other" }
     );
 
   await plugin.builders.structure.representation.addRepresentation(
     commonComponent!,
     {
       type: "cartoon",
-      color: "uniform", // Użyj stałego koloru
+      color: "uniform",
       colorParams: isTarget ? { value: 0x00c6b9 } : { value: 0xfb5f4c },
     }
   );
@@ -112,8 +106,7 @@ async function addComponents(
     {
       type: "cartoon",
       typeParams: { alpha: 0.2 },
-      // alpha: 0.5,
-      color: "uniform", // Użyj stałego koloru
+      color: "uniform",
       colorParams: isTarget ? { value: 0x00c6b9 } : { value: 0xfb5f4c },
     }
   );
@@ -132,7 +125,7 @@ const addStructure = async (
 
   const trajectory_target = await plugin.builders.structure.parseTrajectory(
     data_target,
-    "mmcif" // file_format
+    "mmcif"
   );
   const model_target = await plugin.builders.structure.createModel(
     trajectory_target
@@ -152,7 +145,7 @@ const addStructure = async (
 
   const trajectory_model = await plugin.builders.structure.parseTrajectory(
     data_model,
-    "mmcif" // file_format
+    "mmcif"
   );
   const model_model = await plugin.builders.structure.createModel(
     trajectory_model
@@ -174,49 +167,6 @@ const addStructure = async (
   );
 };
 
-const createPlugin = async (
-  parent: HTMLDivElement,
-  target_file: string,
-  model_file: string,
-  lcs: second_scenario_result_differences_lcs
-) => {
-  let options = {
-    target: parent,
-    render: renderReact18,
-    spec: MolStarPluginSpec,
-  };
-
-  const plugin = await createPluginUI(options);
-
-  PluginCommands.Canvas3D.SetSettings(plugin, {
-    settings: {
-      renderer: {
-        ...plugin.canvas3d!.props.renderer,
-        backgroundColor: ColorNames.white,
-      },
-      camera: {
-        ...plugin.canvas3d!.props.camera,
-        helper: { axes: { name: "off", params: {} } },
-      },
-    },
-  });
-  // applyRNAsoloNeighbourhoodColorScheme(plugin!, parseResidues(contacts));
-
-  await addStructure(plugin, target_file, model_file, lcs);
-  plugin.behaviors.layout.leftPanelTabName.next("data");
-  plugin.canvas3d?.camera.stateChanged
-    .asObservable()
-    .pipe(throttleTime(10, undefined, { leading: true, trailing: true }))!
-    .subscribe((value) => {
-      plugin.canvas3d?.camera.setState({
-        fog: 0,
-        clipFar: false,
-        minNear: 0.1,
-      });
-    });
-  return { plugin };
-};
-
 type MolStarWrapperProps = {
   model_file: string;
   target_file: string;
@@ -224,29 +174,72 @@ type MolStarWrapperProps = {
 };
 
 const MolStarWrapper = (props: MolStarWrapperProps) => {
-  let parent_c: React.RefObject<HTMLDivElement> =
-    React.createRef<HTMLDivElement>();
-  let [plugin, setPlugin] = useState<PluginUIContext | undefined>(undefined);
+  const parentRef = useRef<HTMLDivElement>(null);
+  const pluginRef = useRef<PluginUIContext | null>(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!plugin) {
-      createPlugin(
-        parent_c.current!,
+    let cancelled = false;
+
+    const init = async () => {
+      const plugin = await createPluginUI({
+        target: parentRef.current!,
+        render: renderReact18,
+        spec: MolStarPluginSpec,
+      });
+
+      if (cancelled) {
+        plugin.dispose();
+        return;
+      }
+
+      pluginRef.current = plugin;
+      setReady(true);
+
+      if (plugin.canvas3d) {
+        plugin.canvas3d.camera.stateChanged
+          .asObservable()
+          .pipe(throttleTime(10, undefined, { leading: true, trailing: true }))
+          .subscribe(() => {
+            plugin.canvas3d?.camera.setState({
+              fog: 0,
+              clipFar: false,
+              minNear: 0.1,
+            });
+          });
+      }
+
+      await addStructure(
+        plugin,
         props.target_file,
         props.model_file,
         props.lcs
-      ).then((v) => {
-        setPlugin(v.plugin);
-      });
-    }
+      );
+      plugin.behaviors.layout.leftPanelTabName.next("data");
+    };
+
+    init();
+
+    return () => {
+      cancelled = true;
+      if (pluginRef.current) {
+        pluginRef.current.dispose();
+        pluginRef.current = null;
+      }
+    };
   }, []);
 
   useEffect(() => {
-    if (plugin) {
-      plugin.clear();
-      addStructure(plugin, props.target_file, props.model_file, props.lcs);
+    if (pluginRef.current) {
+      pluginRef.current.clear();
+      addStructure(
+        pluginRef.current,
+        props.target_file,
+        props.model_file,
+        props.lcs
+      );
     }
-  }, [props.model_file]);
+  }, [props.target_file, props.model_file, props.lcs, ready]);
 
   return (
     <div
@@ -254,10 +247,10 @@ const MolStarWrapper = (props: MolStarWrapperProps) => {
         height: "650px",
         width: "100%",
         position: "relative",
-        zIndex: "9999",
+        zIndex: 9999,
       }}
-      ref={parent_c}
-    ></div>
+      ref={parentRef}
+    />
   );
 };
 
