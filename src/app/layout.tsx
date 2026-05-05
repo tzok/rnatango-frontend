@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -35,15 +36,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={openSans.className}>
-      <header>
-        <script
+      {/* <link rel="icon" href="/favicon.ico" sizes="any" /> */}
+      <body>
+        <Script
           defer
           data-domain="rnatango.cs.put.poznan.pl"
           src="https://plausible.cs.put.poznan.pl/js/plausible.js"
-        ></script>
-      </header>
-      {/* <link rel="icon" href="/favicon.ico" sizes="any" /> */}
-      <body>
+          strategy="afterInteractive"
+        />
         <ConfigProvider
           theme={{
             token: {
