@@ -165,11 +165,6 @@ const HeatMap = (props: { dataset: datasetModels[]; models: string[] }) => {
           color: "#04afa4",
           borderColor: "#cccccc",
         },
-        emphasis: {
-          moveHandleStyle: {
-            color: "#04afa4",
-          },
-        },
         labelFormatter: function (value) {
           return `${value + firstIndex}`;
         },

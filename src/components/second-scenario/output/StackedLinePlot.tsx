@@ -126,11 +126,6 @@ const StackedLinePlot = (props: {
           color: "#04afa4",
           borderColor: "#cccccc",
         },
-        emphasis: {
-          moveHandleStyle: {
-            color: "#04afa4",
-          },
-        },
       },
     ],
     series: dataset,
