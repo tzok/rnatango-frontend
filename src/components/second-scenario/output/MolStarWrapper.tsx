@@ -177,6 +177,7 @@ const MolStarWrapper = (props: MolStarWrapperProps) => {
   const parentRef = useRef<HTMLDivElement>(null);
   const pluginRef = useRef<PluginUIContext | null>(null);
   const [ready, setReady] = useState(false);
+  const [parseError, setParseError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -224,6 +225,7 @@ const MolStarWrapper = (props: MolStarWrapperProps) => {
 
   useEffect(() => {
     if (!pluginRef.current) return;
+    setParseError(false);
     pluginRef.current.clear();
     addStructure(
       pluginRef.current,
@@ -232,6 +234,8 @@ const MolStarWrapper = (props: MolStarWrapperProps) => {
       props.lcs
     ).then(() => {
       pluginRef.current?.behaviors.layout.leftPanelTabName.next("data");
+    }).catch(() => {
+      setParseError(true);
     });
   }, [props.target_file, props.model_file, props.lcs, ready]);
 
@@ -244,7 +248,24 @@ const MolStarWrapper = (props: MolStarWrapperProps) => {
         zIndex: 9999,
       }}
       ref={parentRef}
-    />
+    >
+      {parseError && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#fafafa",
+            color: "#666",
+            fontSize: 14,
+          }}
+        >
+          3D structure preview not available
+        </div>
+      )}
+    </div>
   );
 };
 
