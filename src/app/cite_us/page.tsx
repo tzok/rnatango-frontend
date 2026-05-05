@@ -13,8 +13,15 @@ const CiteUs = () => {
         <br />
         <br />
         M. Mackowiak, B. Adamczyk, M. Szachniuk, T. Zok (2024) RNAtango:
-        analysing and comparing RNA 3D structures via torsional angles,{" "}
-        <i>submitted</i>
+        Analysing and Comparing RNA 3D Structures via Torsional Angles, PLOS
+        Computational Biology 20(10):e1012500 (doi:{" "}
+        <a
+          style={{ color: "#04afa4" }}
+          href="https://doi.org/10.1371/journal.pcbi.1012500"
+        >
+          10.1371/journal.pcbi.1012500
+        </a>
+        )
       </p>
       <p style={{ whiteSpace: "pre-line" }}>
         <b> Other related works include:</b>
