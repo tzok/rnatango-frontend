@@ -40,6 +40,7 @@ const GlobalMCQ = (props: { dataset: datasetModels; models: string[] }) => {
         style={{ marginLeft: "30px", marginRight: "30px" }}
         columns={column}
         dataSource={[props.dataset]}
+        rowKey={() => "global-mcq"}
         size="middle"
         bordered
         pagination={false}
